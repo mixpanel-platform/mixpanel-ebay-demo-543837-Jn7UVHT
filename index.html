@@ -83,23 +83,25 @@
           var firstKeys = Object.keys(results);
           for(i = 0; i < firstKeys.length; i++){
             var keyKeys = Object.keys(results[firstKeys[i]]);
-            for(j = 1; j < keyKeys.length; j++){
-              var dates = Object.keys(results[firstKeys[i]][keyKeys[j]]);
-              var name = firstKeys[i] + " / " + keyKeys[j];
-              var firstStep = 0;
-              var finalStep = 0;
-              newResults[name] = 0;
-              for(k = 0; k<dates.length; k++){
-               firstStep += results[firstKeys[i]][keyKeys[j]][dates[k]][0]['count'];
-               finalStep += results[firstKeys[i]][keyKeys[j]][dates[k]][eventsNum - 1]['count'];
-              }
-              if(firstStep > 0) {
-                newResults[name] = (finalStep / firstStep) * 100;
+            for(j = 0; j < keyKeys.length; j++){
+              if (keyKeys[j] != "$overall"){
+                var dates = Object.keys(results[firstKeys[i]][keyKeys[j]]);
+                var name = firstKeys[i] + " / " + keyKeys[j];
+                var firstStep = 0;
+                var finalStep = 0;
+                newResults[name] = 0;
+                for(k = 0; k<dates.length; k++){
+                 firstStep += results[firstKeys[i]][keyKeys[j]][dates[k]][0]['count'];
+                 finalStep += results[firstKeys[i]][keyKeys[j]][dates[k]][eventsNum - 1]['count'];
+                }
+                if(firstStep > 0) {
+                  newResults[name] = (finalStep / firstStep) * 100;
+                }
               }
             }
           }
           console.log(newResults);
-          eventGraph.MPChart('setData', newResults);
+          //eventGraph.MPChart('setData', newResults);
           eventTable.MPTable('setData', newResults);
         }
         
