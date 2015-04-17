@@ -67,7 +67,7 @@
         
         var processResults = function(results, newResults, from, propKeys){
           var promiselist = [];
-          params['segment'] = 'Operating System';
+          params['segment'] = 'utm_source';
           for(var i = 0; i < propKeys.length - 1; i++){
             params['where'] = 'properties["Gender"] == ' + propKeys[i];
             promiselist.push(MP.api.funnel("$signup", "Item Won", params));
