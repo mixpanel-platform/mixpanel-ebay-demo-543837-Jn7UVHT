@@ -69,6 +69,7 @@
         
         var processResults = function(results, newResults, from, propKeys){
           var promiselist = [];
+          params['segment'] = '$city';
           for(var i = 0; i < propKeys.length - 1; i++){
             params['where'] = 'properties["Age"] == ' + propKeys[i];
             promiselist.push(MP.api.funnel("$signup", "Item Won", params));
