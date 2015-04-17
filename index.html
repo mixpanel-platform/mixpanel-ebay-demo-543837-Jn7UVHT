@@ -15,8 +15,6 @@
       <div id="graph"></div>
       <div id="table"></div>
     </div>
-    <div id="conversion" style="float: left; display: none;">Conversion:  </div>
-    <div id="percent" style="float: left; display: none;"></div>
     <script>
       MP.api.ready(function() {
         var dateSelect  = $('#dateSelect').MPDatepicker();
@@ -77,25 +75,32 @@
           
           Promise.all(promiselist).then(function(promiseArray){
             console.log(promiseArray);
-            //finishResults(results, newResults, from, propKeys);
+            finishResults(promiseArray, newResults, from);
           })
         }
         
-        var finishResults = function(results, newResults, from, propKeys) {
-          for(i=0; i<eventsNum; i++){
-            newResults[results[i][from]['event']] = 0;
-            var dates = Object.keys(results[i]);
-            for(j=0; j<dates.length; j++){
-              newResults[results[i][from]['event']] += results[i][dates[j]]['count'];
+        var finishResults = function(results, newResults, from) {
+          var firstKeys = Object.keys(results);
+          for(i = 0; i < firstKeys.length; i++){
+            var keyKeys = Object.keys(results[firstKeys[i]]);
+            for(j = 1; j < keyKeys.length; j++){
+              var dates = Object.keys(results[firstKeys[i]][keyKeys[j]]);
+              var name = firstKeys[i] + " / " + keyKeys[j];
+              var firstStep = 0;
+              var finalStep = 0;
+              newResults[name] = 0;
+              for(k = 0; k<dates.length; k++){
+               firstStep += results[firstKeys[i]][keyKeys[j]][dates[k]][0]['count'];
+               finalStep += results[firstKeys[i]][keyKeys[j]][dates[k]][eventsNum - 1]['count'];
+              }
+              if(firstStep > 0) {
+                newResults[name] = (finalStep / firstStep) * 100;
+              }
             }
-            console.log(newResults);
           }
+          console.log(newResults);
           eventGraph.MPChart('setData', newResults);
           eventTable.MPTable('setData', newResults);
-          $("#conversion").show();
-          var conversion = (newResults['Item Won'] / newResults['$signup']) * 100;
-          $('#percent').html(conversion + "%");
-          $('#percent').show();
         }
         
         intervalPicker.on('change', runQuery);
