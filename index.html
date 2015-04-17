@@ -75,18 +75,18 @@
           
           Promise.all(promiselist).then(function(promiseArray){
             console.log(promiseArray);
-            finishResults(promiseArray, newResults, from);
+            finishResults(promiseArray, newResults, from, propKeys);
           })
         }
         
-        var finishResults = function(results, newResults, from) {
+        var finishResults = function(results, newResults, from, propKeys) {
           var firstKeys = Object.keys(results);
           for(i = 0; i < firstKeys.length; i++){
             var keyKeys = Object.keys(results[firstKeys[i]]);
             for(j = 0; j < keyKeys.length; j++){
               if (keyKeys[j] != "$overall"){
                 var dates = Object.keys(results[firstKeys[i]][keyKeys[j]]);
-                var name = firstKeys[i] + " / " + keyKeys[j];
+                var name = propKeys[i] + " / " + keyKeys[j];
                 var firstStep = 0;
                 var finalStep = 0;
                 newResults[name] = 0;
