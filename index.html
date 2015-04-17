@@ -60,13 +60,27 @@
           if(intervalSelect){
             MP.api.funnel("$signup", "Item Won", params).done(function(results) {
               console.log(results);
-              processResults(results, funnelResults, params['from']);
+              var propKeys = Object.keys(results);
+              processResults(results, funnelResults, params['from'], propKeys);
               //eventTable.MPTable('setData', results);
             });
           }
         };
         
-        var processResults = function(results, newResults, from) {
+        var processResults = function(results, newResults, from, propKeys){
+          var promiselist = [];
+          for(var i = 0; i < propKeys.length; i++){
+            params['where'] = 'properties["Age"] == ' + propKeys[i];
+            promiselist.push(MP.api.funnel("$signup", "Item Won", params));
+          }
+          
+          Promise.all(promiselist).then(function(promiseArray){
+            console.log(promiseArray);
+            //finishResults(results, newResults, from, propKeys);
+          })
+        }
+        
+        var finishResults = function(results, newResults, from, propKeys) {
           for(i=0; i<eventsNum; i++){
             newResults[results[i][from]['event']] = 0;
             var dates = Object.keys(results[i]);
